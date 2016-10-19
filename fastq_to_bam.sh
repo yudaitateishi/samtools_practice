@@ -21,11 +21,15 @@ split -d -l $(($sp)) ../$3 $filename2.
 echo "$3 split"
 cd ..
 
-qsub -o ./qlogs -e ./qlogs -cwd  -t 1-$4:1 ./make_sam.sh $1 ./split/$sequence_name
+qsub -o ./qlogs -e ./qerrors -cwd  -t 1-$4:1 ./make_sam.sh $1 ./split/$sequence_name
 
-while [ $((`qstat | wc -l`-3)) -gt 1 ]
+while :
 do
 	sleep 1m
+	if [ $((`qstat | wc -l`-4)) -lt 1 ]
+	then
+		break
+	fi 
 done
 
 samtools merge $sequence_name.bam ./split/$seqence_name.*.bam
