@@ -1,5 +1,5 @@
-#!/bin/sh
-#$ -S /bin/sh
+#!/bin/bash
+#$ -S /bin/bash
 
 
 SGE=`expr $SGE_TASK_ID - 1`
