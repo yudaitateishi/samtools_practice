@@ -15,12 +15,12 @@ filename1=${2##*/}
 filename2=${3##*/}
 sequence_name=${filename1%_*}
 
-qsub -cwd -N fastq_split ./fastq_split.sh $sequence_name $2 $3 $4 $filename1 $filename2
+qsub -cwd -N fastq_split ./ftb_scripts/fastq_split.sh $sequence_name $2 $3 $4 $filename1 $filename2
 
-qsub -o ./qlogs -e ./qerrors -cwd  -t 1-$4:1 -N make_sam -hold_jid fastq_split ./make_sam.sh $1 ./split/$sequence_name $4
+qsub -o ./qlogs -e ./qerrors -cwd  -t 1-$4:1 -N make_sam -hold_jid fastq_split ./ftb_scripts/make_sam.sh $1 ./split/$sequence_name $4
 
 
 bamfiles="./split/*.bam"
-qsub -cwd -N merge_dupli -hold_jid make_sam ./merge_dupli.sh $sequence_name $bamfiles
+qsub -cwd -N merge_dupli -hold_jid make_sam ./ftb_scripts/merge_dupli_index.sh $sequence_name $bamfiles
 
-qsub -cwd -hold_jid merge_dupli ./del_split.sh
+qsub -cwd -hold_jid merge_dupli ./ftb_scripts/del_split.sh
