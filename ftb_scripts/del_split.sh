@@ -2,4 +2,4 @@
 #$ -S /bin/bash
 
 
-rm -rf ./split
+rm -rf ./f_split
