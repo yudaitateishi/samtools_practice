@@ -7,11 +7,11 @@ import string
 
 with open(sys.argv[1],"r") as mpileup_file:
 	mpileup_list = []
-	for line in mpileup_file.readlines():
+	for line in mpileup_file:
 		mpileup_list.append(line.strip("\n").split("\t"))
 
 
-depth_filter = int(sys.argv[3])
+depth_filter = 10 #int(sys.argv[3])
 snp_list = []
 
 for nuc_position in mpileup_list:

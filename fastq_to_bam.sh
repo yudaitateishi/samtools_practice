@@ -6,7 +6,7 @@ input1=${2}
 input2=${3}
 output=${4}
 jobvol=${5}
-seqname=${6}
+
 
 if [ $# -lt 4 ]
 then
@@ -22,12 +22,12 @@ fi
 #filename2=${3##*/}
 #sequence_name=${filename1%_*}
 
-qsub -cwd -N fastq_split ./ftb_scripts/fastq_split.sh ${seqname} ${input1} ${input2} ${jobvol}
+qsub -cwd -N fastq_split -e ${4}.err -o ${4}.log ./ftb_scripts/fastq_split.sh ${input1} ${input2} ${output} ${jobvol}
 
-qsub -o ./qlogs -e ./qerrors -cwd  -t 1-${jobvol}:1 -N make_sam -hold_jid fastq_split ./ftb_scripts/make_sam.sh ${ref} ./f_split/${seqname} 
+qsub -cwd -N make_sam -hold_jid fastq_split -e ${4}.err -o ${4}.log -t 1-${jobvol}:1 ./ftb_scripts/make_sam.sh ${ref} ./f_split/${output} 
 
 
 bamfiles="./f_split/*.bam"
-qsub -cwd -N merge_dupli -hold_jid make_sam ./ftb_scripts/merge_dupli_index.sh ${output} $bamfiles 
+qsub -cwd -N merge_dupli -hold_jid make_sam -e ${4}.err -o ${4}.log ./ftb_scripts/merge_dupli_index.sh ${output} $bamfiles 
 
-qsub -cwd -hold_jid merge_dupli ./ftb_scripts/del_split.sh
+qsub -cwd -N del_split -hold_jid merge_dupli -e ${4}.err -o${4}.log ./ftb_scripts/del_split.sh
